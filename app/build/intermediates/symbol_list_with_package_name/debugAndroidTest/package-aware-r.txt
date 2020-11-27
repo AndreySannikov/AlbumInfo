@@ -1,0 +1,1 @@
+ru.degus.albuminfo.test
