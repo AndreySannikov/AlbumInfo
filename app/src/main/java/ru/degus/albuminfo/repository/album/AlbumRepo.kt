@@ -16,7 +16,7 @@ class AlbumRepo(val apiFactory: ApiFactory) : IAlbumRepo {
             ?.observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun downloadAlbum(collectionId: Int?): Observable<AlbumsInfo?>? {
+    override fun downloadAlbum(collectionId: String): Observable<AlbumsInfo?>? {
         return if (collectionId != null) {
             apiFactory.getITUnsApi().getAlbum(collectionId)         //получение альбома по идентификатору
                 ?.subscribeOn(Schedulers.io())

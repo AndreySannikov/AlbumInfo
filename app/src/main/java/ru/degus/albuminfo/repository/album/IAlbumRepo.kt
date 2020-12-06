@@ -6,5 +6,5 @@ import ru.degus.albuminfo.models.AlbumsInfo
 
 interface IAlbumRepo {
     fun downloadAlbumsInfo(name: String): Observable<AlbumsInfo?>?  //загрузка списка альбомов по строке name
-    fun downloadAlbum(collectionId: Int?): Observable<AlbumsInfo?>? //загрузка альбома по его идентификатору
+    fun downloadAlbum(collectionId: String): Observable<AlbumsInfo?>? //загрузка альбома по его идентификатору
 }

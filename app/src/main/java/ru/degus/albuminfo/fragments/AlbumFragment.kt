@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import ru.degus.albuminfo.App
 import ru.degus.albuminfo.R
-import ru.degus.albuminfo.activities.Layout
 import ru.degus.albuminfo.adapters.AlbumAdapter
 import ru.degus.albuminfo.databinding.AlbumFragmentBinding
 import ru.degus.albuminfo.models.Result
@@ -58,31 +57,30 @@ class AlbumFragment : BaseFragment<AlbumFragmentBinding>(R.layout.album_fragment
         val album = arguments?.getString("album")                      //получение строки из MainFragmenta
         Log.d("onArgument", album.toString())
         if (album != null) {
-            viewModel.collectionId = album.toInt()                          //установка нового id альбома для поиска
+            viewModel.collectionId = album                          //установка нового id альбома для поиска
             binding.viewModel?.loadAlbum()                                  //вызов поиска альбома
         }
 
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setItems(results: MutableList<Result>?) {                                    //метод в котором осуществляется привязка
+    private fun setItems(results: MutableList<Result?>?) {                                    //метод в котором осуществляется привязка
         if (results != null) {                                                               //данных первого элемента списка, являющегося альбомом,
-            binding.tvAlbumName.text = results[0].collectionCensoredName                     //к элементам View фрагмента
-            binding.tvArtistName.text = results[0].artistName
-            binding.tvGenre.text =
-                "${results[0].primaryGenreName.toUpperCase()} • ${results[0].releaseDate.releaseYear()}"
-            binding.tvLink.text = results[0].collectionViewUrl
+            binding.tvAlbumName.text = results[0]?.collectionCensoredName                      //к элементам View фрагмента
+            binding.tvArtistName.text = results[0]?.artistName
+            binding.tvGenre.text = "${results[0]?.primaryGenreName?.toUpperCase()} • ${results[0]?.releaseDate?.releaseYear()}"
+            binding.tvLink.text = results[0]?.collectionViewUrl
                                                                                               //создание строки описания альбома через конкатенацию
-            binding.tvDescription.text = """${results[0].trackCount} SONGS                     
+            binding.tvDescription.text = """${results[0]?.trackCount} SONGS                     
             |RELEASED ${
-                results[0].releaseDate.releaseMonth().presentationMonth().toUpperCase()
-            } ${results[0].releaseDate.releaseDay()}, ${results[0].releaseDate.releaseYear()}
-            |RIAA ${if(results[0].contentAdvisoryRating != null)results[0].contentAdvisoryRating else "not"}
-            |${results[0].copyright.toUpperCase()}""".trimMargin()
+                results[0]?.releaseDate?.releaseMonth()?.presentationMonth()?.toUpperCase()
+            } ${results[0]?.releaseDate?.releaseDay()}, ${results[0]?.releaseDate?.releaseYear()}
+            |RIAA ${if(results[0]?.contentAdvisoryRating != null) results[0]?.contentAdvisoryRating else "not"}
+            |${results[0]?.copyright?.toUpperCase()}""".trimMargin()
 
 
             Glide.with(App.instance)                                                        //загрузка изображения альбома
-                .load(results[0].artworkUrl100)
+                .load(results[0]?.artworkUrl100)
                 .centerCrop()
                 .placeholder(R.color.colorPrimaryDark)
                 .into(binding.ivAlbum)
@@ -100,8 +98,11 @@ class AlbumFragment : BaseFragment<AlbumFragmentBinding>(R.layout.album_fragment
         binding.rvCurrentAlbum.addItemDecoration(DividerItemDecoration(navigator as Context,LinearLayoutManager.VERTICAL))
     }
 
-    private fun sort(list: MutableList<Result>): List<Result> {             //удаление из списка первого элемента являющегося альбомом,
-        list.removeAll { x -> x.wrapperType == "collection" }               //так как при поиске по id альбома, приходит список первым элементом которого является сам альбом
-        return list.sortedBy { it.collectionCensoredName }                  //сортировка списка по алфавиту
+    private fun sort(list: MutableList<Result?>?): List<Result?> {             //удаление из списка первого элемента являющегося альбомом,
+        list?.removeAll { x -> x?.wrapperType == "collection" }               //так как при поиске по id альбома, приходит список первым элементом которого является сам альбом
+        if (list != null) {
+            return list.sortedBy { it?.collectionCensoredName }
+        }
+        return arrayListOf() //сортировка списка по алфавиту
     }
 }

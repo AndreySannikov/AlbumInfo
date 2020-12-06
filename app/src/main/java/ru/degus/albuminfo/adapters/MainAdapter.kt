@@ -40,7 +40,7 @@ class MainAdapter(var onAlbumClickListener: OnAlbumClickListener) : RecyclerView
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.itemView.setOnClickListener {                                        //обработка клика на элемент списка
-            onAlbumClickListener.onAlbumClick(items[position].collectionId)
+            items[position].collectionId?.let { it1 -> onAlbumClickListener.onAlbumClick(it1) }
         }
         holder.bind(items[position])
 

@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
+import okhttp3.OkHttpClient;
 import ru.degus.albuminfo.App;
 import ru.degus.albuminfo.api.ApiFactory;
 import ru.degus.albuminfo.di.modules.ActivityModule;
@@ -14,6 +15,7 @@ import ru.degus.albuminfo.di.modules.AlbumRepoModule;
 import ru.degus.albuminfo.di.modules.AlbumRepoModule_GetAlbumRepoFactory;
 import ru.degus.albuminfo.di.modules.ApiFactoryModule;
 import ru.degus.albuminfo.di.modules.ApiFactoryModule_ApiFactoryFactory;
+import ru.degus.albuminfo.di.modules.ApiFactoryModule_GetOkHttpClientFactory;
 import ru.degus.albuminfo.di.modules.ApiFactoryModule_ITunsUrlFactory;
 import ru.degus.albuminfo.fragments.AlbumFragment;
 import ru.degus.albuminfo.fragments.AlbumFragment_MembersInjector;
@@ -31,6 +33,8 @@ import ru.degus.albuminfo.viewmodels.MainViewModel_MembersInjector;
 })
 public final class DaggerAppComponent implements AppComponent {
   private Provider<String> iTunsUrlProvider;
+
+  private Provider<OkHttpClient> getOkHttpClientProvider;
 
   private Provider<ApiFactory> apiFactoryProvider;
 
@@ -50,7 +54,8 @@ public final class DaggerAppComponent implements AppComponent {
   private void initialize(final ApiFactoryModule apiFactoryModuleParam,
       final AlbumRepoModule albumRepoModuleParam, final App application) {
     this.iTunsUrlProvider = ApiFactoryModule_ITunsUrlFactory.create(apiFactoryModuleParam);
-    this.apiFactoryProvider = DoubleCheck.provider(ApiFactoryModule_ApiFactoryFactory.create(apiFactoryModuleParam, iTunsUrlProvider));
+    this.getOkHttpClientProvider = ApiFactoryModule_GetOkHttpClientFactory.create(apiFactoryModuleParam);
+    this.apiFactoryProvider = DoubleCheck.provider(ApiFactoryModule_ApiFactoryFactory.create(apiFactoryModuleParam, iTunsUrlProvider, getOkHttpClientProvider));
     this.getAlbumRepoProvider = DoubleCheck.provider(AlbumRepoModule_GetAlbumRepoFactory.create(albumRepoModuleParam, apiFactoryProvider));
   }
 

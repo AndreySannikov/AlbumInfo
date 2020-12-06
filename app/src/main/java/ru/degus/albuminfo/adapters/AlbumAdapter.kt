@@ -16,8 +16,8 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
     private var items: List<Result> = ArrayList()
 
 
-    fun setItems(items:List<Result>) { // установка нового списка в Adapter
-        this.items = items
+    fun setItems(items: List<Result?>) { // установка нового списка в Adapter
+        this.items = items as List<Result>
         notifyDataSetChanged()
     }
 
@@ -37,7 +37,8 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
 
         fun bind(item: Result){
             binding.tvName.text = item.trackCensoredName                        //установка названия трека
-            binding.tvTime.text = timeToString(item.trackTimeMillis.toLong())   //установка продлжительности трека
+            binding.tvTime.text =
+                item.trackTimeMillis?.let { timeToString(it.toLong()) }   //установка продлжительности трека
 
             Glide.with(App.instance)                                            //загрузка изображения трека
                 .load(item.artworkUrl100)

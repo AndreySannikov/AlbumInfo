@@ -21,7 +21,8 @@ class MainViewModel : AbstractViewModel() {
             albumRepo.downloadAlbumsInfo(requestText)
                 ?.subscribe({
                     Log.d("LoadAlbum", it?.results?.size.toString())
-                    albumsData.value = sort(it?.results)         //установка списка альбомов в значение LiveData
+                    albumsData.value =
+                        sort(it?.results) as List<Result>?         //установка списка альбомов в значение LiveData
                 }, {
                     errorData.value = it
                     Log.d("LoadAlbum", it.toString())
@@ -29,8 +30,9 @@ class MainViewModel : AbstractViewModel() {
         )
     }
 
-    private fun sort(list: MutableList<Result>?): List<Result>? {        //проверка списка альбомов на соответсвие поиска по названию альбома
-        list?.removeAll { x -> !x.collectionCensoredName.contains(requestText, ignoreCase = true) }  //так как Api не предусматривает такого поиска
-        return list?.sortedBy { it.collectionCensoredName }              //сортировка списка альбомов по алфавиту
+    private fun sort(list: MutableList<Result?>?): List<Result?>? {
+        //проверка списка альбомов на соответсвие поиска по названию альбома
+        list?.removeAll { x -> !(x != null && x.collectionCensoredName?.contains(requestText, ignoreCase = true) ?: false) }  //так как Api не предусматривает такого поиска
+        return list?.sortedBy { it?.collectionCensoredName }              //сортировка списка альбомов по алфавиту
     }
 }
