@@ -3,10 +3,12 @@ package ru.degus.albuminfo.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.degus.albuminfo.App
 import ru.degus.albuminfo.R
+import ru.degus.albuminfo.components.DiffCallback
 import ru.degus.albuminfo.databinding.AlbumItemViewBinding
 import ru.degus.albuminfo.models.Result
 
@@ -20,10 +22,12 @@ class MainAdapter(var onAlbumClickListener: OnAlbumClickListener) : RecyclerView
         fun onAlbumClick(id: Int)
     }
 
-    fun setItems(items: List<Result>?) {   // установка нового списка в Adapter
-        if (items != null)
-        this.items = items
-        notifyDataSetChanged()
+    fun setItems(newItems: List<Result>?) {   // установка нового списка в Adapter
+        if (newItems != null) {
+            val diffResult = DiffUtil.calculateDiff(DiffCallback(items, newItems), false)
+            items = newItems
+            diffResult.dispatchUpdatesTo(this)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {  // создание ViewHolder
@@ -58,7 +62,7 @@ class MainAdapter(var onAlbumClickListener: OnAlbumClickListener) : RecyclerView
             Glide.with(App.instance)
                 .load(item.artworkUrl100)
                 .centerCrop()
-                .placeholder(R.color.colorPrimaryDark)
+                .placeholder(R.color.colorImplicitText)
                 .into(binding.ivDog)
         }
     }

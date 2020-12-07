@@ -82,7 +82,7 @@ class AlbumFragment : BaseFragment<AlbumFragmentBinding>(R.layout.album_fragment
             Glide.with(App.instance)                                                        //загрузка изображения альбома
                 .load(results[0]?.artworkUrl100)
                 .centerCrop()
-                .placeholder(R.color.colorPrimaryDark)
+                .placeholder(R.color.colorImplicitText)
                 .into(binding.ivAlbum)
 
             adapter.setItems(sort(results))                                                 //сортировка списка

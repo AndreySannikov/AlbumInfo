@@ -43,7 +43,7 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
             Glide.with(App.instance)                                            //загрузка изображения трека
                 .load(item.artworkUrl100)
                 .centerCrop()
-                .placeholder(R.color.colorPrimaryDark)
+                .placeholder(R.color.colorImplicitText)
                 .into(binding.ivDog)
         }
     }
